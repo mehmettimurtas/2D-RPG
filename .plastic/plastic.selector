@@ -1,0 +1,4 @@
+repository "2D-RPG/2D-RPG@18968344131226@cloud"
+  path "/"
+    br "/main"
+    co "/main"
