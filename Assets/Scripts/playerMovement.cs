@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Tilemaps;
-public class Player_movement : MonoBehaviour
+public class playerMovement : MonoBehaviour
 {
     public float speed = 5f;
     public Rigidbody2D rb;
