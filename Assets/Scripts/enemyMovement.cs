@@ -5,31 +5,48 @@ public class enemyMovement : MonoBehaviour
 
     public float speed;
     private Rigidbody2D rb;
-    private bool isChasing;
     private Transform player;
     private int facingDirection = -1;
+    public Animator anim;
+    private EnemyState enemyState;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
+        changeState(EnemyState.Idle);
     }
 
     void Update()
     {
-        if (isChasing == true)
+        if (enemyState == EnemyState.Chasing)
         {
-            if(player.position.x < transform.position.x && facingDirection == -1 ||
-                player.position.x > transform.position.x && facingDirection == 1)
-            {
-                Flip();
-            }
-            
-         
-            Vector2 direction = (player.position - transform.position).normalized;
-            rb.linearVelocity = direction * speed;
+            Chase();
         }
+
+        else if (enemyState == EnemyState.Attacking)
+        {
+
+        }
+
+
     }
 
+
+
+    void Chase()
+    {
+
+        if (player.position.x < transform.position.x && facingDirection == -1 ||
+            player.position.x > transform.position.x && facingDirection == 1)
+        {
+            Flip();
+        }
+
+
+        Vector2 direction = (player.position - transform.position).normalized;
+        rb.linearVelocity = direction * speed;
+    }
 
     void Flip()
     {
@@ -43,10 +60,10 @@ public class enemyMovement : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             if (player == null)
-            { 
-               player = collision.transform; 
+            {
+                player = collision.transform;
             }
-            isChasing = true;
+            changeState(EnemyState.Chasing);
         }
     }
 
@@ -54,8 +71,38 @@ public class enemyMovement : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            isChasing = false;
+
             rb.linearVelocity = Vector2.zero;
+            changeState(EnemyState.Idle);
         }
     }
+
+    void changeState(EnemyState newState)
+    {
+        enemyState = newState;
+        switch (enemyState)
+        {
+            case EnemyState.Idle:
+                anim.SetBool("isChasing", false);
+                anim.SetBool("isIdle", true);
+                break;
+            case EnemyState.Chasing:
+                anim.SetBool("isChasing", true);
+                anim.SetBool("isIdle", false);
+                break;
+            case EnemyState.Attacking:
+                anim.SetBool("isAttacking", true);
+                anim.SetBool("isChasing", false);
+                anim.SetBool("isIdle", false);
+                break;
+        }
+    }
+}
+
+public enum EnemyState
+{
+    Idle,
+    Chasing,
+    Attacking,
+ 
 }
