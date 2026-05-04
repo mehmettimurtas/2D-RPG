@@ -9,6 +9,7 @@ public class enemyMovement : MonoBehaviour
     private int facingDirection = -1;
     public Animator anim;
     private EnemyState enemyState;
+    public float attackRange; 
 
     void Start()
     {
@@ -26,7 +27,7 @@ public class enemyMovement : MonoBehaviour
 
         else if (enemyState == EnemyState.Attacking)
         {
-
+            
         }
 
 
@@ -36,8 +37,13 @@ public class enemyMovement : MonoBehaviour
 
     void Chase()
     {
-
-        if (player.position.x < transform.position.x && facingDirection == -1 ||
+        if (Vector2.Distance(transform.position, player.position) <= attackRange)
+        {
+            rb.linearVelocity = Vector2.zero;
+            changeState(EnemyState.Attacking);
+            return;
+        }
+        else if (player.position.x < transform.position.x && facingDirection == -1 ||
             player.position.x > transform.position.x && facingDirection == 1)
         {
             Flip();
@@ -55,7 +61,7 @@ public class enemyMovement : MonoBehaviour
     }
 
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
@@ -85,10 +91,12 @@ public class enemyMovement : MonoBehaviour
             case EnemyState.Idle:
                 anim.SetBool("isChasing", false);
                 anim.SetBool("isIdle", true);
+                anim.SetBool("isAttacking", false);
                 break;
             case EnemyState.Chasing:
                 anim.SetBool("isChasing", true);
                 anim.SetBool("isIdle", false);
+                anim.SetBool("isAttacking", false);
                 break;
             case EnemyState.Attacking:
                 anim.SetBool("isAttacking", true);

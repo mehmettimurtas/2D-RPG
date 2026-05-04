@@ -12,6 +12,10 @@ public class enemyCombat : MonoBehaviour
         }
     }
 
+    public void Attack()
+    {
+      Debug.Log("Enemy attacks player for " + damage + " damage!");
+    }
 }
 
 
