@@ -10,6 +10,8 @@ public class enemyMovement : MonoBehaviour
     public Animator anim;
     private EnemyState enemyState;
     public float attackRange; 
+    public float attackCooldown;
+    public float attackCooldownTimer;
 
     void Start()
     {
