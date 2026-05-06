@@ -3,15 +3,17 @@ using UnityEngine;
 public class enemyMovement : MonoBehaviour
 {
 
-    public float speed;
+    
     private Rigidbody2D rb;
     private Transform player;
     private int facingDirection = -1;
-    public Animator anim;
     private EnemyState enemyState;
+    
+    public Animator anim;
     public float attackRange; 
     public float attackCooldown;
     public float attackCooldownTimer;
+    public float speed;
 
     void Start()
     {
@@ -22,6 +24,10 @@ public class enemyMovement : MonoBehaviour
 
     void Update()
     {
+        if (attackCooldownTimer > 0)
+        {
+            attackCooldownTimer -= Time.deltaTime;
+        }
         if (enemyState == EnemyState.Chasing)
         {
             Chase();
@@ -39,8 +45,9 @@ public class enemyMovement : MonoBehaviour
 
     void Chase()
     {
-        if (Vector2.Distance(transform.position, player.position) <= attackRange)
+        if (Vector2.Distance(transform.position, player.position) <= attackRange && attackCooldownTimer <= 0)
         {
+            attackCooldownTimer = attackCooldown;
             rb.linearVelocity = Vector2.zero;
             changeState(EnemyState.Attacking);
             return;
