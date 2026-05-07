@@ -6,14 +6,19 @@ public class enemyMovement : MonoBehaviour
     
     private Rigidbody2D rb;
     private Transform player;
+    private Animator anim;
     private int facingDirection = -1;
     private EnemyState enemyState;
+    private float attackCooldownTimer;
+
     
-    public Animator anim;
     public float attackRange; 
     public float attackCooldown;
-    public float attackCooldownTimer;
     public float speed;
+    public float playerDetectionRange;
+    public Transfrom detectionPoint;
+    public LayerMask playerLayer;
+
 
     void Start()
     {
@@ -70,7 +75,24 @@ public class enemyMovement : MonoBehaviour
     }
 
 
-    private void OnTriggerStay2D(Collider2D collision)
+    private void CheckForPlayer()
+    {
+        Collider2D hitPlayer = Physics2D.OverlapCircleAll(detectionPoint.position, playerDetectionRange, playerLayer);
+        if (hitPlayer != null)
+        {
+            player = hitPlayer.transform;
+            changeState(EnemyState.Chasing);
+        }
+        else if (Vector2.Distance(transform.position, player.position) <= attackRange && attackCooldownTimer <= 0)
+        {
+            attackCooldownTimer = attackCooldown;
+            rb.linearVelocity = Vector2.zero;
+            changeState(EnemyState.Attacking);
+            return;
+        }
+    }
+    
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
