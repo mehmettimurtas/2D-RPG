@@ -50,13 +50,7 @@ public class enemyMovement : MonoBehaviour
 
     void Chase()
     {
-        if (Vector2.Distance(transform.position, player.position) <= attackRange && attackCooldownTimer <= 0)
-        {
-            attackCooldownTimer = attackCooldown;
-            rb.linearVelocity = Vector2.zero;
-            changeState(EnemyState.Attacking);
-            return;
-        }
+     
         else if (player.position.x < transform.position.x && facingDirection == -1 ||
             player.position.x > transform.position.x && facingDirection == 1)
         {
