@@ -16,7 +16,7 @@ public class enemyMovement : MonoBehaviour
     public float attackCooldown;
     public float speed;
     public float playerDetectionRange;
-    public Transfrom detectionPoint;
+    public Transform detectionPoint;
     public LayerMask playerLayer;
 
 
@@ -33,7 +33,7 @@ public class enemyMovement : MonoBehaviour
         {
             attackCooldownTimer -= Time.deltaTime;
         }
-        if (enemyState == EnemyState.Chasing)
+        else if (enemyState == EnemyState.Chasing)
         {
             Chase();
         }
@@ -51,7 +51,7 @@ public class enemyMovement : MonoBehaviour
     void Chase()
     {
      
-        else if (player.position.x < transform.position.x && facingDirection == -1 ||
+        if (player.position.x < transform.position.x && facingDirection == -1 ||
             player.position.x > transform.position.x && facingDirection == 1)
         {
             Flip();
@@ -71,7 +71,7 @@ public class enemyMovement : MonoBehaviour
 
     private void CheckForPlayer()
     {
-        Collider2D hitPlayer = Physics2D.OverlapCircleAll(detectionPoint.position, playerDetectionRange, playerLayer);
+        Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(detectionPoint.position, playerDetectionRange, playerLayer);
         if (hitPlayer != null)
         {
             player = hitPlayer.transform;
