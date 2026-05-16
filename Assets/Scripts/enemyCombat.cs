@@ -18,10 +18,12 @@ public class enemyCombat : MonoBehaviour
     public void Attack()
     {
         Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, playerLayer);
-        foreach (Collider2D player in hitPlayer)
+
+        if (hitPlayer.Length > 0)
         {
-            player.GetComponent<playerHealth>().TakeDamage(damage);
+            hitPlayer[0].GetComponent<playerHealth>().TakeDamage(damage);
         }
+        
     }
 }
 

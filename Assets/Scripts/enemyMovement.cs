@@ -16,7 +16,7 @@ public class enemyMovement : MonoBehaviour
     public float attackCooldown;
     public float speed;
     public float playerDetectionRange;
-    public Transfrom detectionPoint;
+    public Transform detectionPoint;
     public LayerMask playerLayer;
 
 
@@ -29,18 +29,20 @@ public class enemyMovement : MonoBehaviour
 
     void Update()
     {
+        CheckForPlayer();
+
         if (attackCooldownTimer > 0)
         {
             attackCooldownTimer -= Time.deltaTime;
         }
+        
         if (enemyState == EnemyState.Chasing)
         {
             Chase();
         }
-
         else if (enemyState == EnemyState.Attacking)
         {
-            
+            rb.linearVelocity = Vector2.zero;
         }
 
 
@@ -51,7 +53,7 @@ public class enemyMovement : MonoBehaviour
     void Chase()
     {
      
-        else if (player.position.x < transform.position.x && facingDirection == -1 ||
+        if (player.position.x < transform.position.x && facingDirection == -1 ||
             player.position.x > transform.position.x && facingDirection == 1)
         {
             Flip();
@@ -71,42 +73,30 @@ public class enemyMovement : MonoBehaviour
 
     private void CheckForPlayer()
     {
-        Collider2D hitPlayer = Physics2D.OverlapCircleAll(detectionPoint.position, playerDetectionRange, playerLayer);
-        if (hitPlayer != null)
+        Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(detectionPoint.position, playerDetectionRange, playerLayer);
+        if (hitPlayer.Length > 0)
         {
-            player = hitPlayer.transform;
-            changeState(EnemyState.Chasing);
-        }
-        else if (Vector2.Distance(transform.position, player.position) <= attackRange && attackCooldownTimer <= 0)
-        {
-            attackCooldownTimer = attackCooldown;
-            rb.linearVelocity = Vector2.zero;
-            changeState(EnemyState.Attacking);
-            return;
-        }
-    }
-    
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            if (player == null)
+            player = hitPlayer[0].transform;
+            if (Vector2.Distance(transform.position, player.position) <= attackRange && attackCooldownTimer <= 0)
             {
-                player = collision.transform;
+                attackCooldownTimer = attackCooldown;
+                changeState(EnemyState.Attacking);
+                return;
             }
-            changeState(EnemyState.Chasing);
+            else if (Vector2.Distance(transform.position, player.position) > attackRange)
+            {
+                changeState(EnemyState.Chasing);
+                return;
+            }
         }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
+        else
         {
-
-            rb.linearVelocity = Vector2.zero;
             changeState(EnemyState.Idle);
+            rb.linearVelocity = Vector2.zero;
+
         }
-    }
+    } 
+  
 
     void changeState(EnemyState newState)
     {
