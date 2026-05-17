@@ -81,12 +81,12 @@ public class enemyMovement : MonoBehaviour
             {
                 attackCooldownTimer = attackCooldown;
                 changeState(EnemyState.Attacking);
-                return;
+                
             }
             else if (Vector2.Distance(transform.position, player.position) > attackRange)
             {
                 changeState(EnemyState.Chasing);
-                return;
+                
             }
         }
         else
