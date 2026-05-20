@@ -120,7 +120,17 @@ public class enemyMovement : MonoBehaviour
                 break;
         }
     }
-}
+
+    private void OnDrawGizmosSelected()
+    {
+        if (detectionPoint == null)
+            return;
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(detectionPoint.position, playerDetectionRange);
+        Gizmos.DrawWireSphere(transform.position, attackRange);
+    }
+
+}   
 
 public enum EnemyState
 {
