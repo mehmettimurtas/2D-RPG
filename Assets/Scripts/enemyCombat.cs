@@ -8,7 +8,7 @@ public class enemyCombat : MonoBehaviour
     public LayerMask playerLayer;
 
 
-    public void Attack()
+    public void enemyAttack()
     {
         Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, playerLayer);
 
