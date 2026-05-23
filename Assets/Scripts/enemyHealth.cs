@@ -1,0 +1,31 @@
+using UnityEngine;
+using UnityEngine.UI;
+
+public class enemyHealth : MonoBehaviour
+{
+    public int currentHealth;
+    public int maxHealth = 50;
+    public Slider slider;
+
+    private void Start()
+    {
+        currentHealth = maxHealth;
+        slider.maxValue = maxHealth;
+        slider.value = currentHealth;
+    }
+
+    public void takeDamage(int damage)
+    {
+        currentHealth -= damage;
+        slider.value = currentHealth;
+        if (currentHealth > maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+
+        else if (currentHealth <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+}
